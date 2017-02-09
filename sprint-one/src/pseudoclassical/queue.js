@@ -8,7 +8,7 @@ var Queue = function() {
 };
 
 Queue.prototype.enqueue = function(value) {
-  this.storage[this.length] = value;
+  this.storage[this.nextValue + this.length] = value;
   this.length++;
 };
 
