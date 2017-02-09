@@ -3,7 +3,8 @@ var Stack = function() {
   // but try not not reference your old code in writing the new style.
   var obj = {};
   obj.storage = {};
-  obj.length = 0;
+  obj.first = 0;
+  obj.last = -1;
 
   _.extend(obj, stackMethods);
 
@@ -12,21 +13,15 @@ var Stack = function() {
 
 var stackMethods = {
   push: function(value) {
-    var index = this.length;
-    this.storage[index] = value;
-    this.length++;
+    this.storage[++this.last] = value;
   },
   pop: function() {
-    if (this.length > 0) {
-      this.length--;
-      var index = this.length;
-      var result = this.storage[index];
-      delete this.storage[index];
-      return result;
+    if (this.size() > 0) {
+      return this.storage[this.last--];
     }
   },
   size: function() {
-    return this.length;
+    return this.last - this.first + 1;
   }
 };
 
