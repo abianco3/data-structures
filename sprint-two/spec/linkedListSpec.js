@@ -52,4 +52,25 @@ describe('linkedList', function() {
   });
 
   // add more tests here to test the functionality of linkedList
+  //change value of existing node
+  it('should contain inserted values', function() {
+    linkedList.addToTail(4);
+    linkedList.addToTail(5);
+    linkedList.insertAfter(6, 4);
+    expect(linkedList.contains(6)).to.equal(true);
+  });
+
+  it('should have the inserted value after the target value', function() {
+    linkedList.addToTail(4);
+    linkedList.addToTail(5);
+    linkedList.insertAfter(6, 4);
+    expect(linkedList.head.next.value).to.equal(6);
+  });
+
+  it('should delete value from linkedList', function() {
+    linkedList.addToTail(4);
+    linkedList.addToTail(5);
+    linkedList.delete(4);
+    expect(linkedList.contains(4)).to.equal(false);
+  });
 });

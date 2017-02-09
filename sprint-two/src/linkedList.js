@@ -29,6 +29,39 @@ var LinkedList = function() {
     }
     return false;
   };
+
+  list.insertAfter = function(value, target) {
+    var currentNode = list.head;
+    while (currentNode !== null) {
+      if (currentNode.value === target) {
+        break;
+      }
+    }
+    if (currentNode !== null) {
+      var newNode = new Node(value);
+      newNode.next = currentNode.next;
+      currentNode.next = newNode;
+    } else {
+      console.log('Target value doesn\'t exist!');
+    }
+    
+  };
+
+  list.delete = function(value) {
+    var currentNode = list.head;
+    while (currentNode !== null) {
+      if (currentNode.value === value) {
+        break;
+      }
+    }
+    if (currentNode !== null) {
+      currentNode.value = currentNode.next.value;
+      currentNode.next = currentNode.next.next;
+    } else {
+      console.log('Target value does not exist!');
+    }
+  };
+
   return list;
 };
 
