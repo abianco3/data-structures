@@ -46,7 +46,7 @@ var LinkedList = function() {
     }
     
   };
-
+//can remove every node except the last one
   list.delete = function(value) {
     var currentNode = list.head;
     while (currentNode !== null) {
