@@ -27,8 +27,17 @@ Graph.prototype.removeNode = function(node) {
   for (var key in this.vertices) {
     if (this.vertices[key] === node) {
       delete this.vertices[key];
-      return;
+      break;
     }
+  }
+  if (this.adjList[node]) {
+    var edges = this.adjList[node];
+    var currentEdge = edges.head;
+    while (currentEdge !== null) {
+      this.removeEdge(currentEdge.value, node);
+      currentEdge = currentEdge.next;
+    }
+    delete edges;
   }
 };
 
@@ -56,15 +65,15 @@ Graph.prototype.addEdge = function(fromNode, toNode) {
 
 // Remove an edge between any two specified (by value) nodes.
 Graph.prototype.removeEdge = function(fromNode, toNode) {
-  var index = this.adjList[fromNode].indexOf(toNode);
-  if (index > -1) {
-    this.adjList[fromNode].splice(index, 1);
-  }
+  this.adjList[fromNode].delete(toNode);
+  this.adjList[toNode].delete(fromNode);
 };
 
 // Pass in a callback which will be executed on each node of the graph.
 Graph.prototype.forEachNode = function(cb) {
-
+  for (var key in this.vertices) {
+    cb(this.vertices[key]);
+  }
 };
 
 /*
