@@ -9,13 +9,20 @@ var LinkedList = function() {
       list.head = node;
     } else {
       list.tail.next = node;
+      node.previous = list.tail;
     }
     list.tail = node;
   };
 
   list.removeHead = function() {
     var result = list.head.value;
-    list.head = list.head.next;
+    if (list.head === list.tail) {
+      list.head = null;
+      list.tail = null;
+    } else {
+      list.head = list.head.next;
+      list.head.previous = null;
+    }
     return result;
   };
 
@@ -36,29 +43,41 @@ var LinkedList = function() {
       if (currentNode.value === target) {
         break;
       }
+      currentNode = currentNode.next;
     }
     if (currentNode !== null) {
       var newNode = new Node(value);
+      currentNode.next.previous = newNode;
       newNode.next = currentNode.next;
       currentNode.next = newNode;
+      newNode.previous = currentNode;
     } else {
       console.log('Target value doesn\'t exist!');
     }
     
   };
-//can remove every node except the last one
+//
   list.delete = function(value) {
     var currentNode = list.head;
     while (currentNode !== null) {
       if (currentNode.value === value) {
         break;
       }
+      currentNode = currentNode.next;
     }
-    if (currentNode !== null) {
-      currentNode.value = currentNode.next.value;
-      currentNode.next = currentNode.next.next;
+    if (currentNode === list.head) {
+      list.removeHead();
+    } else if (currentNode === list.tail) {
+      if (list.tail === list.head) {
+        list.tail = null;
+        list.head = null;
+      } else {
+        list.tail = list.tail.previous;
+        list.tail.next = null;
+      }
     } else {
-      console.log('Target value does not exist!');
+      currentNode.next.previous = currentNode.previous;
+      currentNode.previous.next = currentNode.next;
     }
   };
 
@@ -70,6 +89,7 @@ var Node = function(value) {
 
   node.value = value;
   node.next = null;
+  node.previous = null;
 
   return node;
 };
