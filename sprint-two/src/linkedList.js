@@ -14,6 +14,17 @@ var LinkedList = function() {
     list.tail = node;
   };
 
+  list.addToHead = function(value) {
+    var node = new Node(value);
+    if (list.tail === null) {
+      list.tail === node;
+    } else {
+      list.head.previous = node;
+      node.next = list.head;
+    }
+    list.head = node;
+  };
+
   list.removeHead = function() {
     var result = list.head.value;
     if (list.head === list.tail) {
