@@ -3,19 +3,20 @@
 // Instantiate a new graph
 var Graph = function() {
   this.vertices = {};
-  this.adjList = {};
 };
 
 // Add a node to the graph, passing in the node's value.
 Graph.prototype.addNode = function(node) {
-  // create a object with a value: value pair and an index
-  this.vertices[JSON.stringify(node)] = node;
+  var vertex = {};
+  vertex.value = node;
+  vertex.edges = [];
+  this.vertices[node] = vertex;
 };
 
 // Return a boolean value indicating if the value passed to contains is represented in the graph.
 Graph.prototype.contains = function(node) {
-  for (var key in this.vertices) {
-    if (this.vertices[key] === node) {
+  for (var vertex in this.vertices) {
+    if (this.vertices[vertex].value === node) {
       return true;
     }
   }
@@ -24,55 +25,37 @@ Graph.prototype.contains = function(node) {
 
 // Removes a node from the graph.
 Graph.prototype.removeNode = function(node) {
-  for (var key in this.vertices) {
-    if (this.vertices[key] === node) {
-      delete this.vertices[key];
-      break;
-    }
-  }
-  if (this.adjList[node]) {
-    var edges = this.adjList[node];
-    var currentEdge = edges.head;
-    while (currentEdge !== null) {
-      this.removeEdge(currentEdge.value, node);
-      currentEdge = currentEdge.next;
-    }
-    delete edges;
-  }
+  var _this = this;
+  var edges = this.vertices[node].edges;
+  edges.forEach(function(edge) {
+    _this.removeEdge(edge, node);
+  });
+  delete this.vertices[node];
 };
 
 // Returns a boolean indicating whether two specified nodes are connected.  Pass in the values contained in each of the two nodes.
 Graph.prototype.hasEdge = function(fromNode, toNode) {
-  return this.adjList[fromNode].contains(toNode);
+  return this.vertices[fromNode].edges.indexOf(toNode) > -1;
 };
 
 // Connects two nodes in a graph by adding an edge between them.
 Graph.prototype.addEdge = function(fromNode, toNode) {
-  if (this.adjList[fromNode]) {
-    this.adjList[fromNode].addToTail(toNode);
-  } else {
-    this.adjList[fromNode] = new LinkedList();
-    this.adjList[fromNode].addToTail(toNode);
-  }
-
-  if (this.adjList[toNode]) {
-    this.adjList[toNode].addToTail(fromNode);
-  } else {
-    this.adjList[toNode] = new LinkedList();
-    this.adjList[toNode].addToTail(fromNode);
-  }
+  this.vertices[fromNode].edges.push(toNode);
+  this.vertices[toNode].edges.push(fromNode);
 };
 
 // Remove an edge between any two specified (by value) nodes.
 Graph.prototype.removeEdge = function(fromNode, toNode) {
-  this.adjList[fromNode].delete(toNode);
-  this.adjList[toNode].delete(fromNode);
+  var edges = this.vertices[fromNode].edges;
+  edges.splice(edges.indexOf(toNode), 1);
+  edges = this.vertices[toNode].edges;
+  edges.splice(edges.indexOf(fromNode), 1);
 };
 
 // Pass in a callback which will be executed on each node of the graph.
 Graph.prototype.forEachNode = function(cb) {
-  for (var key in this.vertices) {
-    cb(this.vertices[key]);
+  for (var vertex in this.vertices) {
+    cb(this.vertices[vertex].value);
   }
 };
 
