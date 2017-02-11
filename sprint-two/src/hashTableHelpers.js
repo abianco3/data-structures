@@ -21,8 +21,20 @@ var LimitedArray = function(limit) {
   };
   limitedArray.set = function(index, value) {
     checkLimit(index);
-    storage[index] = value;
+    //check whether we've already something at the position of index
+    if (storage[index]) {
+      for (var i = 0; i < storage[index].length; i++) {
+        if (storage[index][i][0] === value[0]) {
+          storage[index][i][1] = value[1];
+          return;
+        }
+      }
+      storage[index].push(value);
+    } else {
+      storage[index] = [value];
+    }
   };
+
   limitedArray.each = function(callback) {
     for (var i = 0; i < storage.length; i++) {
       callback(storage[i], i, storage);
