@@ -9,7 +9,7 @@ var HashTable = function() {
 HashTable.prototype.insert = function(k, v) {
   if (this._elementCounter / this._limit >= 0.75) {
     this._limit *= 2;
-    this.doubleSize(this._limit);    
+    this._changeSize(this._limit);    
   }
   var index = getIndexBelowMaxForKey(k, this._limit);
   this._storage.set(index, [k, v]);
@@ -37,10 +37,17 @@ HashTable.prototype.remove = function(k) {
       res.splice(i, 1);
     }
   }
-  this._storage.set(index, [undefined, undefined]);
+  this._elementCounter--;
+  // see if elementCount is <= 25% of limit
+  if (this._elementCounter / this._limit < 0.25) {
+    // half of size of limit counter
+    this._limit = Math.floor(this._limit / 2);
+    // reduce the storage size by 50%
+    this._changeSize(this._limit);
+  }
 };
 
-HashTable.prototype.doubleSize = function(newSize) {
+HashTable.prototype._changeSize = function(newSize) {
   var newLimitedArray = new LimitedArray(newSize);
   // for each element in current storage
   this._storage.each(function(value) {
@@ -61,4 +68,6 @@ HashTable.prototype.doubleSize = function(newSize) {
  * Complexity: What is the time complexity of the above functions?
  */
 
+// insert, retrieve remove is on average O(1), worst-case O(n)
+// for _changeSize if the hash function sucks, we may have O(n^2). But normally, it should be O(n).
 
