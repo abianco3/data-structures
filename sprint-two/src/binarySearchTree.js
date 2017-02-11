@@ -104,3 +104,8 @@ BinarySearchTree.prototype.depthFirstLog = function(cb) {
     this.left.depthFirstLog(cb); 
   }
 };
+
+/*complexity:
+insert, contains: O(log(n))
+depthFirstLog: O(n)
+*/

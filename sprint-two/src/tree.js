@@ -40,3 +40,5 @@ treeMethods._searchNode = function (subTree, target) {
 /*
  * Complexity: What is the time complexity of the above functions?
  */
+ // addChild O(1)
+ // contains, _searchNode: O(n)

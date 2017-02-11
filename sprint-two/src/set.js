@@ -51,3 +51,5 @@ setPrototype.remove = function(item) {
 /*
  * Complexity: What is the time complexity of the above functions?
  */
+
+ // with hashTable the average case for add, contains, remove is O(1)
