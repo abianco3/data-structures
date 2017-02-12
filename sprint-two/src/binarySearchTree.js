@@ -54,19 +54,10 @@ var logHelper = function(treeNode, cb) {
 };*/
 
 BinarySearchTree.prototype.insert = function(value) {
-  
   if (value < this.value) {
-    if (this.left !== null) {
-      this.left.insert(value);
-    } else {
-      this.left = BinarySearchTree(value);
-    }
+    this.left ? this.left.insert(value) : (this.left = BinarySearchTree(value));
   } else {
-    if (this.right !== null) {
-      this.right.insert(value);
-    } else {
-      this.right = BinarySearchTree(value);
-    }
+    this.right ? this.right.insert(value) : (this.right = BinarySearchTree(value));
   }
 };
 
@@ -77,17 +68,9 @@ BinarySearchTree.prototype.contains = function(value) {
   if (this.value === value) {
     return true;
   } else if (this.value > value) {
-    if (this.left === null) {
-      return false;
-    } else {
-      return this.left.contains(value);
-    }
+    return !!(this.left && this.left.contains(value));
   } else {
-    if (this.right === null) {
-      return false;
-    } else {
-      return this.right.contains(value);
-    }
+    return !!(this.right && this.right.contains(value));
   }
 };
 
@@ -95,7 +78,6 @@ BinarySearchTree.prototype.depthFirstLog = function(cb) {
   if (this === null) {
     return;
   }
-
   cb(this.value);
   if (this.right) {
     this.right.depthFirstLog(cb);

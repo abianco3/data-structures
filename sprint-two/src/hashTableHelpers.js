@@ -22,17 +22,17 @@ var LimitedArray = function(limit) {
   limitedArray.set = function(index, value) {
     checkLimit(index);
     //check whether we've already something at the position of index
-    if (storage[index]) {
-      for (var i = 0; i < storage[index].length; i++) {
-        if (storage[index][i][0] === value[0]) {
-          storage[index][i][1] = value[1];
-          return;
-        }
-      }
-      storage[index].push(value);
-    } else {
-      storage[index] = [value];
-    }
+    // if (storage[index]) {
+    //   for (var i = 0; i < storage[index].length; i++) {
+    //     if (storage[index][i][0] === value[0]) {
+    //       storage[index][i][1] = value[1];
+    //       return;
+    //     }
+    //   }
+    //   storage[index].push(value);
+    // } else {
+    storage[index] = value;
+    //}
   };
 
   limitedArray.each = function(callback) {

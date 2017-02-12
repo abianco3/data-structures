@@ -48,7 +48,7 @@ var LinkedList = function() {
     return false;
   };
 
-  list.insertAfter = function(value, target) {
+  list.insertAfter = function(newValue, target) {
     var currentNode = list.head;
     while (currentNode !== null) {
       if (currentNode.value === target) {
@@ -57,7 +57,10 @@ var LinkedList = function() {
       currentNode = currentNode.next;
     }
     if (currentNode !== null) {
-      var newNode = new Node(value);
+      if (currentNode === list.tail) {
+        list.addToTail(newValue);
+      }
+      var newNode = new Node(newValue);
       currentNode.next.previous = newNode;
       newNode.next = currentNode.next;
       currentNode.next = newNode;

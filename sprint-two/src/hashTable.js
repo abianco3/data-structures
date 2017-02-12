@@ -7,22 +7,35 @@ var HashTable = function() {
 };
 
 HashTable.prototype.insert = function(k, v) {
+  var index = getIndexBelowMaxForKey(k, this._limit);
+  var bucket = this._storage.get(index) || [];
+  
+
+  for (var i = 0; i < bucket.length; i++) {
+    var tuple = bucket[i];
+    if (tuple[0] === k) {
+      tuple[1] = v;
+      return;
+    }
+  }
+  bucket.push([k, v]);
+
+  this._storage.set(index, bucket);
+  this._elementCounter++;
+  
   if (this._elementCounter / this._limit >= 0.75) {
     this._limit *= 2;
     this._changeSize(this._limit);    
   }
-  var index = getIndexBelowMaxForKey(k, this._limit);
-  this._storage.set(index, [k, v]);
-  this._elementCounter++;
 };
 
 HashTable.prototype.retrieve = function(k) {
   var index = getIndexBelowMaxForKey(k, this._limit);
-  var res = this._storage.get(index);
-  if (res) {
-    for (var i = 0; i < res.length; i++) {
-      if (res[i][0] === k) {
-        return res[i][1];
+  var bucket = this._storage.get(index);
+  if (bucket) {
+    for (var i = 0; i < bucket.length; i++) {
+      if (bucket[i][0] === k) {
+        return bucket[i][1];
       }
     }
   }
@@ -48,18 +61,21 @@ HashTable.prototype.remove = function(k) {
 };
 
 HashTable.prototype._changeSize = function(newSize) {
-  var newLimitedArray = new LimitedArray(newSize);
+  
+
+  var oldStorage = this._storage;
+  this._storage = LimitedArray(newSize);
+  this._elementCounter = 0;
   // for each element in current storage
-  this._storage.each(function(value) {
-    if (value) {
-      for (var i = 0; i < value.length; i++) {
-        var index = getIndexBelowMaxForKey(value[i][0], newSize);
-        newLimitedArray.set(index, value[i]);
+
+  oldStorage.each(function(bucket) {
+    if (bucket) {
+      for (var i = 0; i < bucket.length; i++) {
+        var index = getIndexBelowMaxForKey(bucket[i][0], newSize);
+        this.insert(bucket[i][0], bucket[i][1]);
       }
     }
-  });
-    // insert each element into new limited array
-  this._storage = newLimitedArray;
+  }.bind(this));
 };
 
 
